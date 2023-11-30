@@ -1,0 +1,15 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+apply {
+    from('../dependencies.gradle')
+}
+android {
+    namespace 'com.echo.mine'
+
+}
+
+dependencies {
+
+}

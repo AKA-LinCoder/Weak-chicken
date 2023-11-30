@@ -1,0 +1,160 @@
+//统一配置一些共用参数
+//apply plugin: kotlin.android
+
+//apply plugin: com.google.devtools.ksp
+
+apply plugin: 'kotlin-android'
+apply plugin: 'com.google.devtools.ksp'
+apply plugin: 'kotlin-kapt'
+
+
+android {
+    compileSdk compile_sdk_version
+    buildToolsVersion build_tools_version
+
+
+    defaultConfig {
+        minSdk minSdk_version
+        targetSdk targetSdk_version
+        versionCode versionCode_version
+        versionName versionName_version
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    //共用配置，主要针对其他module，作为独立模块运行的时候，它需要一个启动Activity的主入口配置
+    sourceSets {
+        //默认没有配置flavors的情况，只有main主体渠道 分类debug 和release 两种favorites
+        //如果该module作为独立app运行，使用的配置
+        debug {
+            if (singleModule.toBoolean()) {
+                manifest.srcFile 'src/debug/AndroidManifest.xml'
+                //同理，可配置res.srcDirs之类的
+            } else {
+                manifest.srcFile 'src/main/AndroidManifest.xml'
+            }
+        }
+
+        release {
+            //作为module的时候，就不需要debug包下的文件，排除掉
+            java {
+                exclude 'src/debug/**'
+            }
+        }
+    }
+
+//    dataBinding {
+//        //noinspection DataBindingWithoutKapt
+//        enabled = true
+//    }
+
+    buildFeatures {
+        viewBinding true
+        //noinspection DataBindingWithoutKapt
+        dataBinding true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    // work-runtime-ktx 2.1.0 and above now requires Java 8
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+}
+
+//创建一个dependencies管理的文件，可以在各自module的build.gradle文件里，apply form 该文件的相对路径(包含fileName)，如 apply form ../dependencies.gradle
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation 'androidx.core:core-ktx:1.10.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
+//    implementation 'androidx.core:core-ktx:1.12.0-alpha01'
+    implementation 'androidx.fragment:fragment-ktx:1.6.0-alpha08'
+    implementation 'androidx.activity:activity-ktx:1.2.4'
+    implementation 'com.google.android.material:material:1.9.0-beta01'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    //<editor-folder desc="jetPack libs">
+//	implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'//已经废弃
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
+//    kapt "androidx.lifecycle:lifecycle-common-java8:2.6.1"
+    ksp 'androidx.room:room-compiler:2.5.1'
+
+    implementation 'androidx.room:room-runtime:2.6.0-alpha01'
+//	implementation 'androidx.room:room-rxjava2:2.3.0-alpha01'
+    implementation 'androidx.room:room-common:2.6.0-alpha01'
+    implementation 'androidx.room:room-ktx:2.6.0-alpha01'
+    ksp "androidx.room:room-compiler:2.6.0-alpha01"
+
+    implementation 'androidx.paging:paging-runtime:3.2.0-alpha04'
+    implementation 'androidx.paging:paging-runtime-ktx:3.2.0-alpha04'
+    implementation 'androidx.paging:paging-common:3.2.0-alpha04'
+    implementation 'androidx.paging:paging-common-ktx:3.2.0-alpha04'
+//	implementation 'androidx.paging:paging-rxjava2:2.1.2'
+//	implementation 'androidx.paging:paging-rxjava2-ktx:2.1.2'
+
+    implementation 'androidx.work:work-runtime:2.8.1'
+    implementation 'androidx.work:work-runtime-ktx:2.8.1'
+//	implementation 'androidx.work:work-rxjava2:2.4.0-alpha02'
+    //注意配置navigation版本号的时候，project下的build.gradle的class path也需要同步navigation的版本号配置
+    implementation "androidx.navigation:navigation-ui:$navigation_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-fragment:$navigation_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$navigation_version"
+    implementation "androidx.navigation:navigation-runtime:$navigation_version"
+    //</editor-folder>
+
+    //dagger2 从2.28.3版本也就有了 hilt-android 就是优化的dagger
+    implementation 'com.google.dagger:dagger:2.29.1'
+    ksp 'com.google.dagger:dagger-compiler:2.29.1'
+
+    implementation 'io.reactivex.rxjava3:rxjava:3.0.4'
+    implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
+
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
+    implementation 'com.google.code.gson:gson:2.8.9'
+
+//    implementation 'com.tencent:mmkv-static:1.2.1'
+    implementation 'com.tencent:mmkv:1.3.2'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.15.1'
+    ksp 'com.github.bumptech.glide:ksp:4.16.0'
+
+    //<editor-folder desc="test libs">
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'
+    androidTestImplementation 'androidx.test:core:1.5.0'
+    androidTestImplementation 'androidx.test:rules:1.5.0'
+    androidTestImplementation 'androidx.test:runner:1.5.2'
+    androidTestImplementation 'androidx.test:core-ktx:1.5.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+
+    androidTestImplementation 'org.robolectric:robolectric:4.4'
+
+    androidTestImplementation 'com.squareup.okhttp3:mockwebserver:4.8.0'
+    androidTestImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4'
+    //</editor-folder>
+
+}
