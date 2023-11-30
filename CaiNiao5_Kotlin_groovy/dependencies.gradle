@@ -49,15 +49,15 @@ android {
             }
         }
     }
-
+//AndroidStudio 4 以下使用这种方式配置dataBinding
 //    dataBinding {
 //        //noinspection DataBindingWithoutKapt
 //        enabled = true
 //    }
 
+    //AS4 以上版本使用这个配置dataBinding
     buildFeatures {
         viewBinding true
-        //noinspection DataBindingWithoutKapt
         dataBinding true
     }
 
@@ -67,27 +67,40 @@ android {
     }
 
     // work-runtime-ktx 2.1.0 and above now requires Java 8
+    //使用jetpack的组件，会要求jdk 1.8最好，有的时候会遇到报错，需要配置如下，避免target jvm 1.8的那个报错
     kotlinOptions {
         jvmTarget = "1.8"
+        freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn",] // 添加@OptIn(ExperimentalContracts::class) 注解参数
     }
 
 }
 
 //创建一个dependencies管理的文件，可以在各自module的build.gradle文件里，apply form 该文件的相对路径(包含fileName)，如 apply form ../dependencies.gradle
 dependencies {
+    ///将 'libs' 目录下的所有 JAR 文件添加到项目中
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-
+    ///提供了一些方便的 Kotlin 扩展函数和属性，以简化 Android 开发中的常见任务，core-ktx 通常是与 Android Jetpack 库一起使用的
     implementation 'androidx.core:core-ktx:1.10.1'
+    ///更方便地利用 Kotlin 的语法糖和扩展来处理 JDK 8 的新特性
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    ///引入 Kotlin 协程库的核心模块
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    ///在 Android 平台上使用协程的 Android 扩展功能
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4"
+    ///AppCompat 库为 Android 应用程序提供了向后兼容性，使得你可以使用最新的 Android 功能，同时确保你的应用在旧版本的 Android 上也能够正常运行
     implementation 'androidx.appcompat:appcompat:1.7.0-alpha02'
 //    implementation 'androidx.core:core-ktx:1.12.0-alpha01'
+    ///fragment-ktx 模块提供了一些 Kotlin 扩展函数，以方便在 Kotlin 代码中使用和操作 AndroidX Fragment。这些扩展函数旨在简化 Fragment 相关的操作
     implementation 'androidx.fragment:fragment-ktx:1.6.0-alpha08'
-    implementation 'androidx.activity:activity-ktx:1.2.4'
+    ///activity-ktx 模块提供了一些 Kotlin 扩展函数，以方便在 Kotlin 代码中使用和操作 AndroidX Activity。这些扩展函数旨在简化与 Activity 相关的一些常见操作
+    implementation 'androidx.activity:activity-ktx:1.7.0'
+    ///用于在 Android 项目中引入 Google 的 Material Design 组件库的依赖
     implementation 'com.google.android.material:material:1.9.0-beta01'
+    ///ConstraintLayout 是一个用于创建复杂、灵活和高性能的 Android 用户界面的布局库。它允许开发者使用灵活的约束（constraints）来定义视图之间的关系，以实现自适应和响应式布局
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    ///RecyclerView 是 Android 的一个强大的 UI 组件，用于显示大量数据集合的列表或网格。相比于传统的 ListView，RecyclerView 提供了更灵活的布局管理、视图重用和动画支持，使得在列表中展示数据更加高效和可定制
     implementation 'androidx.recyclerview:recyclerview:1.3.0'
+    ///SwipeRefreshLayout 是 AndroidX 库中的一个组件，允许用户在应用的界面中执行下拉手势，以触发数据的刷新。典型的使用场景是在包含列表的界面中，用户可以通过下拉列表来刷新内容
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     //<editor-folder desc="jetPack libs">
@@ -133,8 +146,8 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.9.2'
-    implementation 'com.google.code.gson:gson:2.8.9'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'com.google.code.gson:gson:2.9.0'
 
 //    implementation 'com.tencent:mmkv-static:1.2.1'
     implementation 'com.tencent:mmkv:1.3.2'
@@ -143,6 +156,7 @@ dependencies {
     ksp 'com.github.bumptech.glide:ksp:4.16.0'
 
     //<editor-folder desc="test libs">
+    ///JUnit 是一个用于编写和运行单元测试的框架，通常用于测试 Java 和 Kotlin 代码
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.5'
     androidTestImplementation 'androidx.test:core:1.5.0'
