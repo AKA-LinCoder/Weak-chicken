@@ -2,10 +2,10 @@ package com.echo.netdemo
 
 import androidx.collection.SimpleArrayMap
 import com.google.gson.Gson
-//import com.echo.netdemo.config.HeaderInterceptor
-//import com.echo.netdemo.config.KtHttpLogInterceptor
-//import com.echo.netdemo.config.LocalCookieJar
-//import com.echo.netdemo.config.RetryInterceptor
+import com.echo.netdemo.config.HeaderInterceptor
+import com.echo.netdemo.config.KtHttpLogInterceptor
+import com.echo.netdemo.config.LocalCookieJar
+import com.echo.netdemo.config.RetryInterceptor
 import com.echo.netdemo.support.EchoHttpCallback
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -38,12 +38,12 @@ private val baseUrl = "http://api.qingyunke.com"
          .followRedirects(false)//重定向
          ///指定缓存数据保存地址
          .cache(Cache(File("sdcard/cache", "okhttp"), 1024))
-//         .cookieJar(LocalCookieJar())
-//         .addNetworkInterceptor(HeaderInterceptor())//公共的header 拦截器
-//         .addNetworkInterceptor(KtHttpLogInterceptor {
-//             logLevel(KtHttpLogInterceptor.LogLevel.BODY)
-//         })//添加网络拦截器，可以对okHttp的网络请求做拦截处理，不同于应用拦截器，这里能感知所有网络状态，比如重定向
-//         .addNetworkInterceptor(RetryInterceptor(maxRetry))
+         .cookieJar(LocalCookieJar())
+         .addNetworkInterceptor(HeaderInterceptor())//公共的header 拦截器
+         .addNetworkInterceptor(KtHttpLogInterceptor {
+             logLevel(KtHttpLogInterceptor.LogLevel.BODY)
+         })//添加网络拦截器，可以对okHttp的网络请求做拦截处理，不同于应用拦截器，这里能感知所有网络状态，比如重定向
+         .addNetworkInterceptor(RetryInterceptor(maxRetry))
          .build()
 
      private var mClient = defaultClient
