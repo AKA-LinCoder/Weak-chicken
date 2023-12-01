@@ -11,8 +11,6 @@ import java.lang.reflect.Type
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * author: huangyaomian
- * created on: 2021/6/13 3:07 下午
  * description:用于将retrofit的call回调数据转化为livedata的adapter
  */
 class LiveDataCallAdapter<R>(private val responseType: Type): CallAdapter<R, LiveData<ApiResponse<R>>> {

@@ -18,12 +18,16 @@ import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
+//
+//private constructor() 私有构造函数
+//写在后面只是把构造函数私有化，类并没有私有化
+//
  class EchoHttpApi private constructor(): HttpApi {
 
 private val baseUrl = "http://api.qingyunke.com"
 
      //最大重连次数
-     var maxRetry: Int = 0
+     private var maxRetry: Int = 0
 
      //存储请求，用于取消
      private val callMap = SimpleArrayMap<Any, Call>()
@@ -72,8 +76,7 @@ private val baseUrl = "http://api.qingyunke.com"
       */
      override fun get(params: Map<String, Any>, path: String, callback: EchoHttpCallback) {
 //        val url = "$baseUrl$path"
-         val url = path
-         val urlBuilder = url.toHttpUrl().newBuilder()
+         val urlBuilder = path.toHttpUrl().newBuilder()
          for (param in params) {
              urlBuilder.addQueryParameter(param.key, param.value.toString())
          }
@@ -173,7 +176,7 @@ private val baseUrl = "http://api.qingyunke.com"
      }
 
      /**
-      * 自定义扩展函数，扩展okhttp的call的异步执行方式，结合协程，返回dataresult的数据响应
+      * 自定义扩展函数，扩展okhttp的call的异步执行方式，结合协程，返回DataResult的数据响应
       */
      private suspend fun Call.call(async: Boolean = true): Response {
          return suspendCancellableCoroutine { continuation ->
@@ -192,6 +195,7 @@ private val baseUrl = "http://api.qingyunke.com"
              } else {
                  continuation.resume(execute())
              }
+             ///协程取消
              continuation.invokeOnCancellation {
                  try {
                      cancel()

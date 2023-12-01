@@ -8,8 +8,6 @@ import java.lang.reflect.ParameterizedType
 import java.lang.reflect.Type
 
 /**
- * author: huangyaomian
- * created on: 2021/6/13 3:14 下午
  * description:用户将retrofit的返回数据，转化为livedata的adapter的工厂类
  */
 class LiveDataCallAdapterFactory: CallAdapter.Factory() {

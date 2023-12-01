@@ -13,6 +13,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.echo.netdemo.ui.theme.CaiNiao5_Kotlin_groovyTheme
 
 class MainActivity : ComponentActivity() {
+    ///表达式声明，使用when，协程,同步代码形式，执行异步的操作
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
