@@ -9,6 +9,12 @@ buildscript {
         targetSdk_version = 34
         versionCode_version = 1
         versionName_version = '1.0'
+
+        navigation_version = '2.3.1' //navigation 版本号，需要在dependencies和classpath保持一致
+
+        koin_version = '2.2.2'//koin依赖注入框架
+
+        dokit_version = '3.4.0-alpha04'
     }
 }
 
@@ -20,3 +26,6 @@ plugins {
     id 'com.google.devtools.ksp' version '1.9.0-1.0.11' apply false
 }
 
+apply plugin: 'com.alibaba.arouter' //添加arouter 插件
+apply plugin: 'koin' //添加koin注入框架
+apply plugin: 'com.didi.dokit' //添加滴滴 dokit 插件
